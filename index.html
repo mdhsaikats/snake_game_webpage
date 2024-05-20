@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <style>
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background-color: black;
+        }
+        #menu {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            border-width: 10px;
+        }
+        #gameOverMessage {
+            display: none;
+            color: red;
+            font-size: 24px;
+            text-align: center;
+        }
+        #score, #life {
+            text-align: center;
+            font-size: 20px;
+            margin-top: 10px;
+        }
+        #restartButton {
+            display: none;
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="menu">
+        <h1>Welcome to Snake Game</h1>
+        <p>Instructions:</p>
+        <ul>
+            <li>Use arrow keys to move the snake.</li>
+            <li>Eat the food to grow longer.</li>
+            <li>Avoid the red border and your own body.</li>
+            <li>You have 3 lives. The game ends when you lose all lives.</li>
+        </ul>
+        <button id="startButton">Start Game</button>
+    </div>
+    <canvas id="gameCanvas" width="600" height="400"></canvas>
+    <div id="score">Score: 0</div>
+    <div id="life">Lives: 3</div>
+    <div id="gameOverMessage">Game Over! Press Restart to play again.</div>
+    <button id="restartButton">Restart Game</button>
+    <script src="script.js"></script>
+</body>
+</html>
