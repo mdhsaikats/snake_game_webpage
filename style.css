@@ -9,7 +9,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.game-container {
+#menu {
     text-align: center;
     background-color: #20232a;
     padding: 20px;
@@ -29,16 +29,13 @@ canvas {
     background-color: #000;
     border-radius: 5px;
     display: block;
-    margin: 0 auto;
+    margin: 20px auto;
 }
 
-.info {
+#score, #life {
+    text-align: center;
+    font-size: 20px;
     margin-top: 10px;
-}
-
-p {
-    margin: 5px;
-    font-size: 18px;
 }
 
 button {
@@ -56,3 +53,19 @@ button {
 button:hover {
     background-color: #21a1f1;
 }
+
+#gameOverMessage {
+    display: none;
+    color: red;
+    font-size: 24px;
+    text-align: center;
+}
+
+#restartButton {
+    display: none;
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
