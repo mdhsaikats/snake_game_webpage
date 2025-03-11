@@ -4,40 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake Game</title>
-    <style>
-        canvas {
-            display: block;
-            margin: 0 auto;
-            background-color: black;
-        }
-        #menu {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            border-width: 10px;
-        }
-        #gameOverMessage {
-            display: none;
-            color: red;
-            font-size: 24px;
-            text-align: center;
-        }
-        #score, #life {
-            text-align: center;
-            font-size: 20px;
-            margin-top: 10px;
-        }
-        #restartButton {
-            display: none;
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="menu">
@@ -56,6 +23,8 @@
     <div id="life">Lives: 3</div>
     <div id="gameOverMessage">Game Over! Press Restart to play again.</div>
     <button id="restartButton">Restart Game</button>
+
     <script src="script.js"></script>
 </body>
 </html>
+
