@@ -1,149 +1,80 @@
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-const startButton = document.getElementById('startButton');
-const restartButton = document.getElementById('restartButton');
-const menu = document.getElementById('menu');
-const gameOverMessage = document.getElementById('gameOverMessage');
-const scoreDisplay = document.getElementById('score');
-const lifeDisplay = document.getElementById('life');
-
-const box = 20;
-let snake = [{ x: 10 * box, y: 10 * box }];
-let direction = "RIGHT";
-let food = generateFood();
-let score = 0;
-let life = 3;
-let gameInterval;
-let gamePaused = false;
-
-startButton.addEventListener('click', startGame);
-document.addEventListener('keydown', directionControl);
-restartButton.addEventListener('click', restartGame);
-
-function startGame() {
-    menu.style.display = 'none';
-    gameOverMessage.style.display = 'none';
-    restartButton.style.display = 'none';
-    score = 0;
-    life = 3;
-    snake = [{ x: 10 * box, y: 10 * box }];
-    direction = "RIGHT";
-    food = generateFood();
-    updateScoreAndLife();
-    gameInterval = setInterval(draw, 100);
-}
-
-function directionControl(event) {
-    if (event.keyCode === 37 && direction !== "RIGHT") direction = "LEFT";
-    if (event.keyCode === 38 && direction !== "DOWN") direction = "UP";
-    if (event.keyCode === 39 && direction !== "LEFT") direction = "RIGHT";
-    if (event.keyCode === 40 && direction !== "UP") direction = "DOWN";
-}
-
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw border
-    ctx.strokeStyle = 'red';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(0, 0, canvas.width, canvas.height);
-
-    // Update snake and food
-    moveSnake();
-    drawSnake();
-    drawFood();
-
-    // Collision detection
-    if (checkCollision()) {
-        life--;
-        if (life > 0) {
-            resetSnake();
-            setTimeout(() => gamePaused = false, 1000);
-        } else {
-            gameOver();
+// Initialize the game when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    const game = new SnakeGame();
+    
+    // Prevent default behavior for arrow keys and space
+    document.addEventListener('keydown', (e) => {
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+            e.preventDefault();
         }
-    }
-
-    // Update score and life display
-    updateScoreAndLife();
-}
-
-function moveSnake() {
-    let snakeX = snake[0].x;
-    let snakeY = snake[0].y;
-
-    if (direction === "LEFT") snakeX -= box;
-    if (direction === "UP") snakeY -= box;
-    if (direction === "RIGHT") snakeX += box;
-    if (direction === "DOWN") snakeY += box;
-
-    if (snakeX === food.x && snakeY === food.y) {
-        score++;
-        food = generateFood();
-    } else {
-        snake.pop();
-    }
-
-    let newHead = { x: snakeX, y: snakeY };
-    snake.unshift(newHead);
-}
-
-function drawSnake() {
-    snake.forEach((segment, index) => {
-        ctx.fillStyle = index === 0 ? "green" : "white";
-        ctx.fillRect(segment.x, segment.y, box, box);
-        ctx.strokeStyle = "red";
-        ctx.strokeRect(segment.x, segment.y, box, box);
     });
-}
-
-function drawFood() {
-    ctx.fillStyle = "red";
-    ctx.fillRect(food.x, food.y, box, box);
-}
-
-function checkCollision() {
-    let snakeX = snake[0].x;
-    let snakeY = snake[0].y;
-
-    if (snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height) {
-        return true;
-    }
-
-    for (let i = 1; i < snake.length; i++) {
-        if (snakeX === snake[i].x && snakeY === snake[i].y) {
-            return true;
+    
+    // Add touch controls for mobile
+    let touchStartX = 0;
+    let touchStartY = 0;
+    
+    document.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+    });
+    
+    document.addEventListener('touchend', (e) => {
+        if (!touchStartX || !touchStartY) return;
+        
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        
+        const diffX = touchStartX - touchEndX;
+        const diffY = touchStartY - touchEndY;
+        
+        const minSwipeDistance = 50;
+        
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            // Horizontal swipe
+            if (Math.abs(diffX) > minSwipeDistance) {
+                if (diffX > 0) {
+                    // Swipe left
+                    game.nextDirection = game.isValidDirection('LEFT') ? 'LEFT' : game.nextDirection;
+                } else {
+                    // Swipe right
+                    game.nextDirection = game.isValidDirection('RIGHT') ? 'RIGHT' : game.nextDirection;
+                }
+            }
+        } else {
+            // Vertical swipe
+            if (Math.abs(diffY) > minSwipeDistance) {
+                if (diffY > 0) {
+                    // Swipe up
+                    game.nextDirection = game.isValidDirection('UP') ? 'UP' : game.nextDirection;
+                } else {
+                    // Swipe down
+                    game.nextDirection = game.isValidDirection('DOWN') ? 'DOWN' : game.nextDirection;
+                }
+            }
         }
-    }
-
-    return false;
-}
-
-function generateFood() {
-    return {
-        x: Math.floor(Math.random() * 29 + 1) * box,
-        y: Math.floor(Math.random() * 19 + 1) * box
-    };
-}
-
-function resetSnake() {
-    snake = [{ x: 10 * box, y: 10 * box }];
-    direction = "RIGHT";
-}
-
-function updateScoreAndLife() {
-    scoreDisplay.innerText = `Score: ${score}`;
-    lifeDisplay.innerText = `Lives: ${life}`;
-}
-
-function gameOver() {
-    clearInterval(gameInterval);
-    gameOverMessage.style.display = 'block';
-    restartButton.style.display = 'block';
-}
-
-function restartGame() {
-    gameOverMessage.style.display = 'none';
-    restartButton.style.display = 'none';
-    startGame();
-}
+        
+        touchStartX = 0;
+        touchStartY = 0;
+    });
+    
+    // Add visibility change handler to pause game when tab is not active
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden && !game.isPaused && !game.isGameOver) {
+            game.togglePause();
+        }
+    });
+    
+    // Add resize handler for responsive canvas
+    window.addEventListener('resize', () => {
+        // Adjust canvas size for mobile if needed
+        if (window.innerWidth < 900) {
+            const canvas = document.getElementById('gameCanvas');
+            const container = canvas.parentElement;
+            const maxWidth = Math.min(window.innerWidth - 40, 800);
+            const maxHeight = Math.min(window.innerHeight - 200, 600);
+            
+            canvas.style.width = maxWidth + 'px';
+            canvas.style.height = (maxWidth * 0.75) + 'px';
+        }
+    });
+});
