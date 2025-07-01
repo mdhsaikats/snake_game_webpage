@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Snake Game Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#00ff88">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Snake Game Pro">
+  <link rel="stylesheet" crossorigin href="/assets/index-CbazCjwy.css">
+</head>
+<body>
+    <div class="game-container">
+        <div id="menu" class="menu">
+            <h1>🐍 SNAKE GAME PRO</h1>
+            <div class="menu-content">
+                <div class="instructions">
+                    <h3>How to Play</h3>
+                    <ul>
+                        <li>🎮 Use controls to move the snake</li>
+                        <li>🍎 Eat food to grow and score points</li>
+                        <li>⚡ Avoid walls and your own body</li>
+                        <li>💖 You have 3 lives to start</li>
+                        <li>🏆 Beat your high score!</li>
+                        <li>📱 Swipe or use D-pad on mobile</li>
+                    </ul>
+                </div>
+                <div class="difficulty-selector">
+                    <h3>Choose Difficulty</h3>
+                    <div class="difficulty-buttons">
+                        <button class="difficulty-btn" data-speed="150">Easy</button>
+                        <button class="difficulty-btn active" data-speed="100">Normal</button>
+                        <button class="difficulty-btn" data-speed="70">Hard</button>
+                        <button class="difficulty-btn" data-speed="50">Insane</button>
+                    </div>
+                </div>
+                <button id="startButton" class="start-btn">🚀 START GAME</button>
+            </div>
+        </div>
+
+        <div id="gameArea" class="game-area">
+            <div class="game-header">
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Score</span>
+                        <span id="score" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">High Score</span>
+                        <span id="highScore" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Lives</span>
+                        <span id="life" class="stat-value">3</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Level</span>
+                        <span id="level" class="stat-value">1</span>
+                    </div>
+                </div>
+                <button id="pauseButton" class="pause-btn">⏸️ PAUSE</button>
+            </div>
+            
+            <canvas id="gameCanvas" width="400" height="300"></canvas>
+            
+            <div class="game-controls">
+                <div class="control-hint">
+                    <span>Use ⬅️ ➡️ ⬆️ ⬇️ or WASD to move</span>
+                    <span>Press SPACE to pause</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameOverScreen" class="game-over-screen">
+            <div class="game-over-content">
+                <h2 id="gameOverTitle">🎮 GAME OVER</h2>
+                <div class="final-stats">
+                    <div class="final-stat">
+                        <span>Final Score</span>
+                        <span id="finalScore">0</span>
+                    </div>
+                    <div class="final-stat">
+                        <span>Level Reached</span>
+                        <span id="finalLevel">1</span>
+                    </div>
+                    <div class="final-stat" id="newHighScoreIndicator" style="display: none;">
+                        <span>🏆 NEW HIGH SCORE! 🏆</span>
+                    </div>
+                </div>
+                <button id="restartButton" class="restart-btn">🔄 PLAY AGAIN</button>
+                <button id="menuButton" class="menu-btn">📋 MAIN MENU</button>
+            </div>
+        </div>
+
+        <div id="pauseScreen" class="pause-screen">
+            <div class="pause-content">
+                <h2>⏸️ PAUSED</h2>
+                <p>Tap Resume or swipe to continue</p>
+                <button id="resumeButton" class="resume-btn">▶️ RESUME</button>
+                <button id="pauseMenuButton" class="menu-btn">📋 MAIN MENU</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Touch Controls -->
+    <div class="mobile-controls">
+        <div class="dpad">
+            <button class="dpad-btn dpad-up" data-direction="UP">⬆️</button>
+            <button class="dpad-btn dpad-down" data-direction="DOWN">⬇️</button>
+            <button class="dpad-btn dpad-left" data-direction="LEFT">⬅️</button>
+            <button class="dpad-btn dpad-right" data-direction="RIGHT">➡️</button>
+            <button class="dpad-btn dpad-center" id="mobilePauseBtn">⏸️</button>
+        </div>
+    </div>
+
+    <div class="particles" id="particles"></div>
+    
+    <script src="game.js"></script>
+    <script src="particles.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
