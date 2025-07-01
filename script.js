@@ -9,31 +9,53 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Prevent context menu on long press for mobile
-    document.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
+    // Add touch controls for mobile
+    let touchStartX = 0;
+    let touchStartY = 0;
+    
+    document.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
     });
     
-    // Prevent default touch behaviors
-    document.addEventListener('touchstart', (e) => {
-        // Allow scrolling on menu and game over screens
-        const allowScrollElements = ['.menu', '.game-over-screen', '.pause-screen'];
-        const isScrollableArea = allowScrollElements.some(selector => 
-            e.target.closest(selector)
-        );
+    document.addEventListener('touchend', (e) => {
+        if (!touchStartX || !touchStartY) return;
         
-        if (!isScrollableArea) {
-            e.preventDefault();
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        
+        const diffX = touchStartX - touchEndX;
+        const diffY = touchStartY - touchEndY;
+        
+        const minSwipeDistance = 50;
+        
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            // Horizontal swipe
+            if (Math.abs(diffX) > minSwipeDistance) {
+                if (diffX > 0) {
+                    // Swipe left
+                    game.nextDirection = game.isValidDirection('LEFT') ? 'LEFT' : game.nextDirection;
+                } else {
+                    // Swipe right
+                    game.nextDirection = game.isValidDirection('RIGHT') ? 'RIGHT' : game.nextDirection;
+                }
+            }
+        } else {
+            // Vertical swipe
+            if (Math.abs(diffY) > minSwipeDistance) {
+                if (diffY > 0) {
+                    // Swipe up
+                    game.nextDirection = game.isValidDirection('UP') ? 'UP' : game.nextDirection;
+                } else {
+                    // Swipe down
+                    game.nextDirection = game.isValidDirection('DOWN') ? 'DOWN' : game.nextDirection;
+                }
+            }
         }
-    }, { passive: false });
-    
-    document.addEventListener('touchmove', (e) => {
-        // Prevent scrolling during gameplay
-        const gameArea = document.getElementById('gameArea');
-        if (gameArea.style.display !== 'none') {
-            e.preventDefault();
-        }
-    }, { passive: false });
+        
+        touchStartX = 0;
+        touchStartY = 0;
+    });
     
     // Add visibility change handler to pause game when tab is not active
     document.addEventListener('visibilitychange', () => {
@@ -42,82 +64,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Handle orientation changes
-    window.addEventListener('orientationchange', () => {
-        setTimeout(() => {
-            game.setupCanvas();
-            // Reset snake position to prevent out-of-bounds issues
-            if (!game.isGameOver) {
-                game.snake = [{ x: 10 * game.box, y: 10 * game.box }];
-                game.food = game.generateFood();
-            }
-        }, 100);
-    });
-    
-    // Handle resize for responsive canvas
-    let resizeTimeout;
+    // Add resize handler for responsive canvas
     window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            game.setupCanvas();
-            // Regenerate food to ensure it's within bounds
-            if (!game.isGameOver) {
-                game.food = game.generateFood();
-            }
-        }, 250);
-    });
-    
-    // Prevent zoom on double tap
-    let lastTouchEnd = 0;
-    document.addEventListener('touchend', (e) => {
-        const now = (new Date()).getTime();
-        if (now - lastTouchEnd <= 300) {
-            e.preventDefault();
+        // Adjust canvas size for mobile if needed
+        if (window.innerWidth < 900) {
+            const canvas = document.getElementById('gameCanvas');
+            const container = canvas.parentElement;
+            const maxWidth = Math.min(window.innerWidth - 40, 800);
+            const maxHeight = Math.min(window.innerHeight - 200, 600);
+            
+            canvas.style.width = maxWidth + 'px';
+            canvas.style.height = (maxWidth * 0.75) + 'px';
         }
-        lastTouchEnd = now;
-    }, false);
-    
-    // Add focus management for better mobile experience
-    const focusableElements = document.querySelectorAll('button, [tabindex]');
-    focusableElements.forEach(element => {
-        element.addEventListener('focus', () => {
-            element.style.outline = '2px solid #00ff88';
-        });
-        
-        element.addEventListener('blur', () => {
-            element.style.outline = 'none';
-        });
     });
-    
-    // Performance optimization: reduce particle count on low-end devices
-    const isLowEndDevice = () => {
-        return navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2;
-    };
-    
-    if (isLowEndDevice()) {
-        // Reduce visual effects for better performance
-        const style = document.createElement('style');
-        style.textContent = `
-            .particle { display: none; }
-            #gameCanvas { box-shadow: none; }
-            .menu { animation: none; }
-            .game-over-screen { animation: none; }
-        `;
-        document.head.appendChild(style);
-    }
-    
-    // Add haptic feedback support detection
-    if ('vibrate' in navigator) {
-        console.log('Haptic feedback supported');
-    }
-    
-    // Service Worker registration for offline support (optional)
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            // Uncomment to enable offline support
-            // navigator.serviceWorker.register('/sw.js')
-            //     .then(registration => console.log('SW registered'))
-            //     .catch(error => console.log('SW registration failed'));
-        });
-    }
 });
