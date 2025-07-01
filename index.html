@@ -2,10 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <title>Snake Game Pro</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#00ff88">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Snake Game Pro">
 </head>
 <body>
     <div class="game-container">
@@ -15,11 +19,12 @@
                 <div class="instructions">
                     <h3>How to Play</h3>
                     <ul>
-                        <li>🎮 Use arrow keys or WASD to move</li>
+                        <li>🎮 Use controls to move the snake</li>
                         <li>🍎 Eat food to grow and score points</li>
                         <li>⚡ Avoid walls and your own body</li>
                         <li>💖 You have 3 lives to start</li>
                         <li>🏆 Beat your high score!</li>
+                        <li>📱 Swipe or use D-pad on mobile</li>
                     </ul>
                 </div>
                 <div class="difficulty-selector">
@@ -58,7 +63,7 @@
                 <button id="pauseButton" class="pause-btn">⏸️ PAUSE</button>
             </div>
             
-            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            <canvas id="gameCanvas" width="400" height="300"></canvas>
             
             <div class="game-controls">
                 <div class="control-hint">
@@ -92,10 +97,21 @@
         <div id="pauseScreen" class="pause-screen">
             <div class="pause-content">
                 <h2>⏸️ PAUSED</h2>
-                <p>Press SPACE or click Resume to continue</p>
+                <p>Tap Resume or swipe to continue</p>
                 <button id="resumeButton" class="resume-btn">▶️ RESUME</button>
                 <button id="pauseMenuButton" class="menu-btn">📋 MAIN MENU</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Mobile Touch Controls -->
+    <div class="mobile-controls">
+        <div class="dpad">
+            <button class="dpad-btn dpad-up" data-direction="UP">⬆️</button>
+            <button class="dpad-btn dpad-down" data-direction="DOWN">⬇️</button>
+            <button class="dpad-btn dpad-left" data-direction="LEFT">⬅️</button>
+            <button class="dpad-btn dpad-right" data-direction="RIGHT">➡️</button>
+            <button class="dpad-btn dpad-center" id="mobilePauseBtn">⏸️</button>
         </div>
     </div>
 
